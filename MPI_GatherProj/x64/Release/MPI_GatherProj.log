@@ -1,13 +1,8 @@
 ﻿  Main.cpp
-Main.cpp(25): warning C4996: 'MPI_Type_extent': Deprecated in MPI 2.0, use 'MPI_Type_get_extent'.  To disable deprecation, define MSMPI_NO_DEPRECATE_20.
-  C:\Program Files (x86)\Microsoft SDKs\MPI\Include\mpi.h(6203): note: see declaration of 'MPI_Type_extent'
-Main.cpp(26): warning C4996: 'MPI_Type_extent': Deprecated in MPI 2.0, use 'MPI_Type_get_extent'.  To disable deprecation, define MSMPI_NO_DEPRECATE_20.
-  C:\Program Files (x86)\Microsoft SDKs\MPI\Include\mpi.h(6203): note: see declaration of 'MPI_Type_extent'
-Main.cpp(95): warning C4244: '=': conversion from 'int' to 'float', possible loss of data
   Generating code
-  1 of 12 functions ( 8.3%) were compiled, the rest were copied from previous compilation.
+  2 of 12 functions (16.7%) were compiled, the rest were copied from previous compilation.
     0 functions were new in current compilation
-    0 functions had inline decision re-evaluated but remain unchanged
+    4 functions had inline decision re-evaluated but remain unchanged
   Finished generating code
   MPI_GatherProj.vcxproj -> E:\VSProjects\MPI_GatherProj\x64\Release\MPI_GatherProj.exe
   MPI_GatherProj.vcxproj -> E:\VSProjects\MPI_GatherProj\x64\Release\MPI_GatherProj.pdb (Full PDB)

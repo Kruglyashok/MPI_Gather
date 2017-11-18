@@ -19,11 +19,16 @@ int  MPI_Gather(void *sbuf, int scount, MPI_Datatype stype, void *rbuf, int rcou
 		|| scount != rcount || stype != rtype) {
 		return 0;
 	}
-	MPI_Aint sendExtent; // extent of MPI_ types of data 
-	MPI_Aint recvExtent; // extent of MPI_ types of data 
-
-	MPI_Type_extent(stype, &sendExtent); //getting extent
-	MPI_Type_extent(rtype, &recvExtent); //getting extent
+	//MPI_Aint sendExtent; // extent of MPI_ types of data 
+	//MPI_Aint recvExtent; // extent of MPI_ types of data 
+	//
+	//MPI_Aint s;
+	int sendExtent;
+	int recvExtent;
+	//MPI_Type_extent(stype, &sendExtent); //getting extent
+	//MPI_Type_extent(rtype, &recvExtent); //getting extent
+	MPI_Type_size(rtype, &recvExtent);
+	MPI_Type_size(stype, &sendExtent);
 
 	
 	//filling the rbuf of root proc with data
@@ -49,6 +54,8 @@ int  MPI_Gather(void *sbuf, int scount, MPI_Datatype stype, void *rbuf, int rcou
 
 		}
 	}
+
+
 	return 1;
 }
 
@@ -59,8 +66,7 @@ int main(int argc, char * argv[]) {
 	int size, rank;
 	
 	int *sbuf, *rbuf; // testing MPI_Gather with ints
-	double *dsbuf, *drbuf; // testing MPI_Gather wint doubles
-	float *fsbuf, *frbuf; //testing MPI_Gather wint floats
+
 	
 	int rcount, scount;
 	int root;
@@ -75,7 +81,6 @@ int main(int argc, char * argv[]) {
 		return 0;
 	}
 
-
 	rcount = 2; 
 	scount = 2;
 
@@ -84,23 +89,10 @@ int main(int argc, char * argv[]) {
 	sbuf = new int[scount];
 	for (int i = 0; i < scount; i++) sbuf[i] = rank;
 	
-	//doubles
-	drbuf = new double[rcount*size];
-	dsbuf = new double[scount];
-	for (int i = 0; i < scount; i++) dsbuf[i] = rank;
-	
-	//floats
-	frbuf = new float[rcount*size];
-	fsbuf = new float[scount];
-	for (int i = 0; i < scount; i++) fsbuf[i] = rank;
-
 
 	for (int i = 0; i < rcount * size; i++) rbuf[i] =  -1;
 
-	for (int i = 0; i < rcount * size; i++) drbuf[i] = -1;	
 
-	for (int i = 0; i < rcount * size; i++) frbuf[i] = -1;
-	
 
 
 	if (rank == root) {
@@ -110,22 +102,14 @@ int main(int argc, char * argv[]) {
 		}
 		cout << endl;
 
-		cout << "DOUBLE Array Before:" << endl;
-		for (int i = 0; i < rcount * size; i++) {
-			cout << rbuf[i] << "\t";
-		}
-		cout << endl;
-		cout << "FLOAT Array Before:" << endl;
-		for (int i = 0; i < rcount * size; i++) {
-			cout << rbuf[i] << "\t";
-		}
-		cout << endl;
+
 	}
 	
-	MPI_Barrier(MPI_COMM_WORLD);
-	//MPI_Gather(dsbuf, scount, MPI_DOUBLE, drbuf, rcount, MPI_DOUBLE, root, MPI_COMM_WORLD);
-	
-    MPI_Gather(sbuf, scount, MPI_INT, rbuf, rcount, MPI_INT, root, MPI_COMM_WORLD);
+
+
+
+
+	MPI_Gather(sbuf, scount, MPI_INT, rbuf, rcount, MPI_INT, root, MPI_COMM_WORLD);
 
 	if (rank == root) {
 
@@ -136,25 +120,8 @@ int main(int argc, char * argv[]) {
 		cout << endl;
 	}
 
-	
-	if (rank == root) {
-		cout << "Final DOUBLE Array:" << endl;
-		for (int i = 0; i < rcount * size; i++) {
-			cout << drbuf[i] << "\t";
-		}
-		cout << endl;
-	}
 
-	MPI_Barrier(MPI_COMM_WORLD);
-	MPI_Gather(fsbuf, scount, MPI_FLOAT, frbuf, rcount, MPI_FLOAT, root, MPI_COMM_WORLD);
-	MPI_Barrier(MPI_COMM_WORLD);
-
-	if (rank == root) {
-		cout << "Final FLOAT Array:" << endl;
-		for (int i = 0; i < rcount * size; i++) {
-			cout << frbuf[i] << "\t";
-		}
-	}
+	delete sbuf, rbuf;
 	MPI_Finalize();
 	return 0;
 }
