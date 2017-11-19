@@ -4,9 +4,7 @@
 #include <ctime> 
 #include <iostream>
 
-
 using namespace std;
-
 
 int  MPI_Gather(void *sbuf, int scount, MPI_Datatype stype, void *rbuf, int rcount, MPI_Datatype rtype, int root, MPI_Comm comm) {
 	
@@ -55,11 +53,8 @@ int  MPI_Gather(void *sbuf, int scount, MPI_Datatype stype, void *rbuf, int rcou
 		}
 	}
 
-
 	return 1;
 }
-
-
 
 int main(int argc, char * argv[]) {
 	
@@ -89,37 +84,25 @@ int main(int argc, char * argv[]) {
 	sbuf = new int[scount];
 	for (int i = 0; i < scount; i++) sbuf[i] = rank;
 	
-
 	for (int i = 0; i < rcount * size; i++) rbuf[i] =  -1;
 
-
-
-
 	if (rank == root) {
-		cout << "INT Array Before:" << endl;
+		cout << "Array Before:" << endl;
 		for (int i = 0; i < rcount * size; i++) {
 			cout << rbuf[i] << "\t";
 		}
 		cout << endl;
-
-
 	}
-	
-
-
-
-
 	MPI_Gather(sbuf, scount, MPI_INT, rbuf, rcount, MPI_INT, root, MPI_COMM_WORLD);
 
 	if (rank == root) {
 
-		cout << "Final INT Array:" << endl;
+		cout << "Final Array:" << endl;
 		for (int i = 0; i < rcount * size; i++) {
 			cout << rbuf[i] << "\t";
 		}
 		cout << endl;
 	}
-
 
 	delete sbuf, rbuf;
 	MPI_Finalize();
