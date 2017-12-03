@@ -66,7 +66,9 @@ int main(int argc, char * argv[]) {
 	int size, rank;
 
 	int *sbuf, *rbuf; // testing MPI_Gather with ints
-
+	
+	double *dsbuf, *drbuf;
+	
 	int rcount, scount;
 	int root;
 
@@ -86,9 +88,17 @@ int main(int argc, char * argv[]) {
 	//ints
 	rbuf = new int[rcount*size];
 	sbuf = new int[scount];
+	drbuf = new double[rcount*size];
+	dsbuf = new double[scount];
+
 	for (int i = 0; i < scount; i++) sbuf[i] = rank;
 
 	for (int i = 0; i < rcount * size; i++) rbuf[i] = -1;
+
+
+	for (int i = 0; i < scount; i++) dsbuf[i] = rank;
+
+	for (int i = 0; i < rcount * size; i++) drbuf[i] = -1;
 
 	if (rank == root) {
 		cout << "Array Before:" << endl;
@@ -97,6 +107,15 @@ int main(int argc, char * argv[]) {
 		}
 		cout << endl;
 	}
+
+	if (rank == root) {
+		cout << "Array DOUBLE Before:" << endl;
+		for (int i = 0; i < rcount * size; i++) {
+			cout << drbuf[i] << "\t";
+		}
+		cout << endl;
+	}
+	MPI_Gather(dsbuf, scount, MPI_DOUBLE, drbuf, rcount, MPI_DOUBLE, root, MPI_COMM_WORLD);
 	MPI_Gather(sbuf, scount, MPI_INT, rbuf, rcount, MPI_INT, root, MPI_COMM_WORLD);
 
 	if (rank == root) {
@@ -107,7 +126,14 @@ int main(int argc, char * argv[]) {
 		}
 		cout << endl;
 	}
+	if (rank == root) {
 
+		cout << "Final DOUBLE Array:" << endl;
+		for (int i = 0; i < rcount * size; i++) {
+			cout << drbuf[i] << "\t";
+		}
+		cout << endl;
+	}
 	delete sbuf, rbuf;
 	MPI_Finalize();
 	return 0;
